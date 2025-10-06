@@ -4,14 +4,13 @@
 
 #define MAX_ITENS 10
 
-// Definição da struct Item
 typedef struct {
     char nome[30];
     char tipo[20];
     int quantidade;
 } Item;
 
-// Função para cadastrar um item
+
 void inserirItem(Item mochila[], int *qtdItens) {
     if (*qtdItens >= MAX_ITENS) {
         printf("Mochila cheia! Não é possível adicionar mais itens.\n");
@@ -28,20 +27,20 @@ void inserirItem(Item mochila[], int *qtdItens) {
 
     printf("Digite a quantidade: ");
     scanf("%d", &mochila[*qtdItens].quantidade);
-    getchar();  
+    getchar();  // Limpar o '\n' deixado pelo scanf
 
     (*qtdItens)++;
     printf("Item adicionado com sucesso!\n");
 }
 
-// Função para remover um item
+
+
 void removerItem(Item mochila[], int *qtdItens, const char *nome) {
     int i, encontrado = 0;
     
     for (i = 0; i < *qtdItens; i++) {
         if (strcmp(mochila[i].nome, nome) == 0) {
             encontrado = 1;
-            
             for (int j = i; j < *qtdItens - 1; j++) {
                 mochila[j] = mochila[j + 1];
             }
@@ -56,7 +55,8 @@ void removerItem(Item mochila[], int *qtdItens, const char *nome) {
     }
 }
 
-// Função para listar os itens da mochila
+
+
 void listarItens(Item mochila[], int qtdItens) {
     if (qtdItens == 0) {
         printf("Mochila vazia!\n");
@@ -69,24 +69,26 @@ void listarItens(Item mochila[], int qtdItens) {
     }
 }
 
-// Função para buscar um item na mochila
-void buscarItem(Item mochila[], int qtdItens, const char *nome) {
-    int i, encontrado = 0;
 
+
+void buscarItemComComparacoes(Item mochila[], int qtdItens, const char *nome, int *comparacoes) {
+    int i;
+    *comparacoes = 0;
     for (i = 0; i < qtdItens; i++) {
+        (*comparacoes)++;
         if (strcmp(mochila[i].nome, nome) == 0) {
-            printf("Item encontrado! Nome: %s | Tipo: %s | Quantidade: %d\n", mochila[i].nome, mochila[i].tipo, mochila[i].quantidade);
-            encontrado = 1;
-            break;
+            printf("Item encontrado! Nome: %s | Tipo: %s | Quantidade: %d\n",
+                   mochila[i].nome, mochila[i].tipo, mochila[i].quantidade);
+            
+            return;
         }
     }
-
-    if (!encontrado) {
-        printf("Item não encontrado.\n");
-    }
+    printf("Item não encontrado.\n");
+    printf("Comparações realizadas: %d\n", *comparacoes);
 }
 
-// Função principal
+
+
 int main() {
     Item mochila[MAX_ITENS];
     int qtdItens = 0;
@@ -98,7 +100,7 @@ int main() {
         printf("1. Cadastrar item\n");
         printf("2. Remover item\n");
         printf("3. Listar itens\n");
-        printf("4. Buscar item\n");
+        printf("4. Buscar item \n");
         printf("5. Sair\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
@@ -121,7 +123,8 @@ int main() {
                 printf("\nDigite o nome do item a ser buscado: ");
                 fgets(nomeBusca, 30, stdin);
                 nomeBusca[strcspn(nomeBusca, "\n")] = '\0';  
-                buscarItem(mochila, qtdItens, nomeBusca);
+                int comparacoes;
+                buscarItemComComparacoes(mochila, qtdItens, nomeBusca, &comparacoes);
                 break;
             case 5:
                 printf("Saindo do sistema...\n");
